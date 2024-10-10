@@ -93,10 +93,10 @@ for benchmark in ${BENCHMARKS_TO_RUN}; do
     fi
 
 	# Actual benchmark
-	echo "Benchmarking now... "
+	echo -n "Benchmarking now... "
 
 	# Start collecting stats
-	./collect_stats.sh "${NAME}" "${RESULTS_DIR}" &
+	#./collect_stats.sh "${NAME}" "${RESULTS_DIR}" &
 
 	# Start the gRPC Client
   ghz \
@@ -109,32 +109,35 @@ for benchmark in ${BENCHMARKS_TO_RUN}; do
     --concurrency="${GRPC_CLIENT_CONCURRENCY}" \
     --connections="${GRPC_CLIENT_CONNECTIONS}" \
     --rps="${GRPC_CLIENT_QPS}" \
-    --duration="${GRPC_BENCHMARK_WARMUP}" \
+    --duration="${GRPC_BENCHMARK_DURATION}" \
     --data-file="${PWD}/scenarios/${NAME}/data.json" \
     --metadata="{\"x-user-id\": \"131313\", \"x-session-id\": \"${SESSION_ID}\"}" \
     "${GRPC_SERVER_ENDPOINT}:${GRPC_SERVER_PORT}" > "${RESULTS_DIR}/${NAME}".report
 
 	# Show quick summary (reqs/sec)
-	cat << EOF
-		done.
-		Results:
-		$(cat "${RESULTS_DIR}/${NAME}".report | grep "Requests/sec" | sed -E 's/^ +/    /')
-EOF
+#	cat << EOF
+#		done.
+#		Results:
+#		$(cat "${RESULTS_DIR}/${NAME}".report | grep "Requests/sec" | sed -E 's/^ +/    /')
+#EOF
+  echo "🤩 done!"
 
-	kill -INT %1 2>/dev/null
+  cat "${RESULTS_DIR}/${NAME}".report
+
+#	kill -INT %1 2>/dev/null
 done
 
-if sh analyze.sh $RESULTS_DIR; then
-  cat ${RESULTS_DIR}/bench.params
-  echo "All done."
-else
-  echo "Analysis fiascoed."
-  ls -lha $RESULTS_DIR
-  for f in $RESULTS_DIR/*; do
-  	echo
-  	echo
-  	echo "$f"
-	  cat "$f"
-  done
-  exit 1
-fi
+#if sh analyze.sh $RESULTS_DIR; then
+#  cat ${RESULTS_DIR}/bench.params
+#  echo "All done."
+#else
+#  echo "Analysis fiascoed."
+#  ls -lha $RESULTS_DIR
+#  for f in $RESULTS_DIR/*; do
+#  	echo
+#  	echo
+#  	echo "$f"
+#	  cat "$f"
+#  done
+#  exit 1
+#fi
