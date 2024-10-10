@@ -1,0 +1,9 @@
+{
+  "actions": [
+    {
+      "action": {
+        "@type": "sp.rpc.usersync.EventSyncAction"
+      }
+    }
+  ]
+}
